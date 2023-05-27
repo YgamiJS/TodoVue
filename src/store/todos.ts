@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { v4 as uuid } from "uuid";
 import { useStorage } from "@vueuse/core";
-import { ITodo } from "@/types";
+import type { ITodo } from "@/types";
 
 export const useTodosStore = defineStore("todos", () => {
   const todos = useStorage<ITodo[]>("todos", []);
