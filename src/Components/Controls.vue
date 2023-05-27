@@ -47,7 +47,7 @@ const addTodo = () => {
   gap: 16px;
 }
 .input {
-  background: #dcb47a;
+  background: #e8c084;
   font-weight: 700;
   outline: none;
   color: #ffffff;
