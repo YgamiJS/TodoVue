@@ -1,0 +1,7 @@
+{
+  "add": "add",
+  "description": "description",
+  "requiredValue": "This field is required",
+  "no-todo": "No todo",
+  "delete": "delete"
+}
