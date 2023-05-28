@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import { useTodosStore } from "@/store/todos";
-import { useField } from "vee-validate";
+import { useField, useForm } from "vee-validate";
 import { useI18n } from "vue-i18n";
+import * as yup from "yup";
 
-const { t } = useI18n();
 const todosStore = useTodosStore();
-const { value, errorMessage, meta, resetField } = useField<string>("text", isValid);
 
-function isValid(value: string): string | boolean {
-  return value.trim() ? true : t("requiredValue");
+interface Form {
+  text: string;
 }
 
-const addTodo = () => {
-  if (!value.value.trim() && !meta.valid) return;
+const { t } = useI18n();
 
-  todosStore.addTodo({
-    title: value.value
-  });
+const schema = yup.object({
+  text: yup.string().required(t("requiredValue"))
+});
 
-  value.value = "";
-};
+const { errors, values, meta } = useForm<Form>({
+  validationSchema: schema
+});
+
+const { value: textValue } = useField("text");
+
+function addTodo() {
+  todosStore.addTodo({ title: values.text });
+  textValue.value = "";
+}
 </script>
 
 <template>
@@ -27,12 +33,12 @@ const addTodo = () => {
     <input
       class="input"
       type="text"
-      @blur="resetField()"
-      :placeholder="t('description')"
-      v-model.trim="value"
+      :placeholder="$t('description')"
+      name="text"
+      v-model="textValue"
     />
-    <p v-if="errorMessage">{{ errorMessage }}</p>
-    <button class="button" :disabled="!meta.valid">{{ t("add") }}</button>
+    <p class="error-message" v-if="errors.text">{{ errors.text }}</p>
+    <button class="button" type="submit" :disabled="!meta.valid">{{ $t("add") }}</button>
   </form>
 </template>
 
@@ -59,6 +65,8 @@ const addTodo = () => {
 
 .input::placeholder {
   color: #ffffff;
+}
+.error-message {
 }
 
 .button {
